@@ -3,6 +3,7 @@ import { promisify } from 'util'
 import fs from 'fs'
 const sleep = promisify(setTimeout)
 const writeFile = promisify(fs.writeFile)
+const mkdir = promisify(fs.mkdir)
 
 async function main () {
     const browser = await puppeteer.launch()
@@ -20,7 +21,8 @@ async function main () {
             await sleep(500)
             // break // for debug
         }
-        await writeFile('./output/horseRefs.json', JSON.stringify(horseRefs))
+        await mkdir('./output/', { recursive: true })
+        await writeFile('./output/horseRefs.json', JSON.stringify(horseRefs, null, 2), { flag: 'w' })
         const raceRecords:Object[] = []
         const horseRecords:Object[] = []
         for (let horseRef of horseRefs) {
@@ -49,8 +51,8 @@ async function main () {
             await sleep(500)
             // break // for debug
         }
-        await writeFile('./output/raceRecords.json', JSON.stringify(raceRecords))
-        await writeFile('./output/horseRecords.json', JSON.stringify(horseRecords))
+        await writeFile('./output/raceRecords.json', JSON.stringify(raceRecords, null, 2), { flag: 'w' })
+        await writeFile('./output/horseRecords.json', JSON.stringify(horseRecords, null, 2), { flag: 'w' })
     } catch (e) {
         console.error(e)
     } finally {
